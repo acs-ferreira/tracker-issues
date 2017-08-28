@@ -35,22 +35,24 @@ class DashboardStreamAction extends Stream
              * Generally show only public content
              */
             $publicSpacesSql = (new Query())
-                ->select(["contentcontainer.id"])
+                ->select(['contentcontainer.id'])
                 ->from('space')
                 ->leftJoin('contentcontainer', 'space.id=contentcontainer.pk AND contentcontainer.class=:spaceClass')
                 ->where('space.visibility=' . Space::VISIBILITY_ALL);
             $union = \Yii::$app->db->getQueryBuilder()->build($publicSpacesSql)[0];
 
             $publicProfilesSql = (new Query())
-                ->select("contentcontainer.id")
+                ->select('contentcontainer.id')
                 ->from('user')
                 ->leftJoin('contentcontainer', 'user.id=contentcontainer.pk AND contentcontainer.class=:userClass')
                 ->where('user.status=1 AND user.visibility = ' . User::VISIBILITY_ALL);
-            $union .= " UNION " . \Yii::$app->db->getQueryBuilder()->build($publicProfilesSql)[0];
+            $union .= ' UNION ' . \Yii::$app->db->getQueryBuilder()->build($publicProfilesSql)[0];
 
-            $this->activeQuery->andWhere('content.contentcontainer_id IN (' . $union .
+            $this->activeQuery->andWhere(
+                'content.contentcontainer_id IN (' . $union .
                                          ') OR content.contentcontainer_id IS NULL',
-                [':spaceClass' => Space::className(), ':userClass' => User::className()]);
+                [':spaceClass' => Space::className(), ':userClass' => User::className()]
+            );
             $this->activeQuery->andWhere(['content.visibility' => Content::VISIBILITY_PUBLIC]);
         } else {
 
@@ -59,35 +61,41 @@ class DashboardStreamAction extends Stream
              */
             // Following (User to Space/User)
             $userFollows = (new Query())
-                ->select(["contentcontainer.id"])
+                ->select(['contentcontainer.id'])
                 ->from('user_follow')
-                ->leftJoin('contentcontainer',
-                    'contentcontainer.pk=user_follow.object_id AND contentcontainer.class=user_follow.object_model')
+                ->leftJoin(
+                    'contentcontainer',
+                    'contentcontainer.pk=user_follow.object_id AND contentcontainer.class=user_follow.object_model'
+                )
                 ->where('user_follow.user_id=' . $this->user->id .
                         ' AND (user_follow.object_model = :spaceClass OR user_follow.object_model = :userClass)');
             $union = \Yii::$app->db->getQueryBuilder()->build($userFollows)[0];
 
             // User to space memberships
             $spaceMemberships = (new Query())
-                ->select("contentcontainer.id")
+                ->select('contentcontainer.id')
                 ->from('space_membership')
                 ->leftJoin('space sm', 'sm.id=space_membership.space_id')
                 ->leftJoin('contentcontainer', 'contentcontainer.pk=sm.id AND contentcontainer.class = :spaceClass')
                 ->where('space_membership.user_id=' . $this->user->id . ' AND space_membership.show_at_dashboard = 1');
-            $union .= " UNION " . \Yii::$app->db->getQueryBuilder()->build($spaceMemberships)[0];
+            $union .= ' UNION ' . \Yii::$app->db->getQueryBuilder()->build($spaceMemberships)[0];
 
             if ($friendshipEnabled) {
                 // User to user follows
                 $usersFriends = (new Query())
-                    ->select(["ufrc.id"])
+                    ->select(['ufrc.id'])
                     ->from('user ufr')
-                    ->leftJoin('user_friendship recv',
-                        'ufr.id=recv.friend_user_id AND recv.user_id=' . (int)$this->user->id)
-                    ->leftJoin('user_friendship snd',
-                        'ufr.id=snd.user_id AND snd.friend_user_id=' . (int)$this->user->id)
+                    ->leftJoin(
+                        'user_friendship recv',
+                        'ufr.id=recv.friend_user_id AND recv.user_id=' . (int)$this->user->id
+                    )
+                    ->leftJoin(
+                        'user_friendship snd',
+                        'ufr.id=snd.user_id AND snd.friend_user_id=' . (int)$this->user->id
+                    )
                     ->leftJoin('contentcontainer ufrc', 'ufr.id=ufrc.pk AND ufrc.class=:userClass')
                     ->where('recv.id IS NOT NULL AND snd.id IS NOT NULL AND ufrc.id IS NOT NULL');
-                $union .= " UNION " . \Yii::$app->db->getQueryBuilder()->build($usersFriends)[0];
+                $union .= ' UNION ' . \Yii::$app->db->getQueryBuilder()->build($usersFriends)[0];
             }
 
             // Glue together also with current users wall
@@ -95,11 +103,13 @@ class DashboardStreamAction extends Stream
                 ->select('cc.id')
                 ->from('contentcontainer cc')
                 ->where('cc.pk=' . $this->user->id . ' AND cc.class=:userClass');
-            $union .= " UNION " . \Yii::$app->db->getQueryBuilder()->build($wallIdsSql)[0];
+            $union .= ' UNION ' . \Yii::$app->db->getQueryBuilder()->build($wallIdsSql)[0];
 
             // Manual Union (https://github.com/yiisoft/yii2/issues/7992)
-            $this->activeQuery->andWhere('contentcontainer.id IN (' . $union . ') OR contentcontainer.id IS NULL',
-                [':spaceClass' => Space::className(), ':userClass' => User::className()]);
+            $this->activeQuery->andWhere(
+                'contentcontainer.id IN (' . $union . ') OR contentcontainer.id IS NULL',
+                [':spaceClass' => Space::className(), ':userClass' => User::className()]
+            );
 
             /**
              * Begin visibility checks regarding the content container

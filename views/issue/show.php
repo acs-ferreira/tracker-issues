@@ -21,7 +21,7 @@ use yii\helpers\Html;
 <div class="panel panel-default">
     <div class="panel-body">
 
-        <?php if ($canCreateNewIssue): ?>
+        <?php if ($canCreateNewIssue) : ?>
             <a href="<?php echo $contentContainer->createUrl('create'); ?>" class="btn btn-primary"
                data-target="#globalModal">
                 <i class="fa fa-plus"></i> <?php echo Yii::t('TrackerIssuesModule.views', 'New issue'); ?>

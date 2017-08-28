@@ -50,7 +50,8 @@ if (!isset($submitAjax)) {
     <div class="col-md-8">
 
         <?= $form->field($issueForm, 'assignedUsers')
-            ->widget(\humhub\modules\user\widgets\UserPickerField::class,
+            ->widget(
+                \humhub\modules\user\widgets\UserPickerField::class,
                 ['url' => $this->context->contentContainer->createUrl('/space/membership/search')]
             ); ?>
 
@@ -114,10 +115,12 @@ if (!isset($submitAjax)) {
             <?php if ($submitAjax) : ?>
                 data-ui-loader
                 data-action-click="editSubmit"
-                data-action-url="<?= $this->context->contentContainer->createUrl('/' .
+                data-action-url="<?= $this->context->contentContainer->createUrl(
+                    '/' .
                                                                                  \tracker\Module::getIdentifier() .
                                                                                  '/issue/edit',
-                    ['id' => $issueForm->id]) ?>"
+                    ['id' => $issueForm->id]
+                                 ) ?>"
             <?php endif; ?>
         >
             <?= Yii::t('TrackerIssuesModule.views', 'Save') ?>

@@ -48,9 +48,7 @@ $assigners = $issue->getAssignees()->all();
                 <tbody>
                 <tr>
                     <td>
-                        <?php foreach (
-                            $issue->getAssignees()->andWhere('view_mark = 0 AND finish_mark = 0')->all() as $assigner
-                        ) : ?>
+                        <?php foreach ($issue->getAssignees()->andWhere('view_mark = 0 AND finish_mark = 0')->all() as $assigner) : ?>
                             <a href="<?php echo $assigner->user->getUrl(); ?>">
                                 <img src="<?php echo $assigner->user->getProfileImage()->getUrl(); ?>"
                                      class="img-rounded tt img_margin"
@@ -62,9 +60,7 @@ $assigners = $issue->getAssignees()->all();
                         <?php endforeach; ?>
                     </td>
                     <td>
-                        <?php foreach (
-                            $issue->getAssignees()->andWhere('view_mark = 1 AND finish_mark = 0')->all() as $assigner
-                        ) : ?>
+                        <?php foreach ($issue->getAssignees()->andWhere('view_mark = 1 AND finish_mark = 0')->all() as $assigner) : ?>
                             <a href="<?php echo $assigner->user->getUrl(); ?>">
                                 <img src="<?php echo $assigner->user->getProfileImage()->getUrl(); ?>"
                                      class="img-rounded tt img_margin"
@@ -76,9 +72,7 @@ $assigners = $issue->getAssignees()->all();
                         <?php endforeach; ?>
                     </td>
                     <td>
-                        <?php foreach (
-                            $issue->getAssignees()->andWhere('finish_mark = 1')->all() as $assigner
-                        ) : ?>
+                        <?php foreach ($issue->getAssignees()->andWhere('finish_mark = 1')->all() as $assigner) : ?>
                             <a href="<?php echo $assigner->user->getUrl(); ?>">
                                 <img src="<?php echo $assigner->user->getProfileImage()->getUrl(); ?>"
                                      class="img-rounded tt img_margin"
@@ -103,7 +97,8 @@ $assigners = $issue->getAssignees()->all();
                             'type' => 'POST',
                             'success' => new yii\web\JsExpression(
                                 'function(html){ $(\'div[data-content-key="' . $issue->content->id .
-                                '"]\').html(html); }'),
+                                '"]\').html(html); }'
+                            ),
                             'url' => $issue->content->container->createUrl(
                                 '/' . \tracker\Module::getIdentifier() . '/issue/mark-adopted',
                                 ['id' => $assigner->id,]
@@ -114,14 +109,15 @@ $assigners = $issue->getAssignees()->all();
                         ],
                     ]);
                     ?>
-                <?php elseif ((!$assigner->finish_mark)): ?>
+                <?php elseif ((!$assigner->finish_mark)) : ?>
                     <?= \humhub\widgets\AjaxButton::widget([
                         'label' => Yii::t('TrackerIssuesModule.views', 'Done'),
                         'ajaxOptions' => [
                             'type' => 'POST',
                             'success' => new yii\web\JsExpression(
                                 'function(html){ $(\'div[data-content-key="' . $issue->content->id .
-                                '"]\').html(html); }'),
+                                '"]\').html(html); }'
+                            ),
                             'url' => $issue->content->container->createUrl(
                                 '/' . \tracker\Module::getIdentifier() . '/issue/mark-done',
                                 ['id' => $assigner->id,]

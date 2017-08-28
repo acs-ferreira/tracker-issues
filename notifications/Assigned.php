@@ -27,7 +27,8 @@ class Assigned extends BaseNotification
         /** @var \tracker\models\Issue $issue */
         $issue = $this->source;
         return \Yii::t(
-            'TrackerIssuesModule.views', '{userName} assigned you to the issue {issue}.',
+            'TrackerIssuesModule.views',
+            '{userName} assigned you to the issue {issue}.',
             [
                 '{userName}' => '<strong>' . Html::encode($this->originator->getDisplayName()) . '</strong>',
                 '{issue}' => '"' . Html::encode($issue->getContentDescription()) . '"',

@@ -5,6 +5,5 @@ class Test extends \Codeception\Test\Unit
 {
     public function testCreate()
     {
-
     }
 }

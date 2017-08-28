@@ -65,7 +65,6 @@ class IssueEditor extends IssueService
             ->all(), 'user_id', 'user.guid');
 
         foreach ($this->requestForm->assignedUsers as $userGuid) {
-
             $key = array_search($userGuid, $oldAssignees, true);
 
             if ($key === false) {
@@ -86,7 +85,6 @@ class IssueEditor extends IssueService
         }
 
         foreach ($oldAssignees as $userId => $usrGuid) {
-
             if ($usrGuid !== null) {
                 $assigneeModel = Assignee::findOne(['user_id' => $userId]);
                 $assigneeModel->delete();

@@ -59,7 +59,6 @@ class IssueCreator extends IssueService
         $this->issueModel->fileManager->attach(\Yii::$app->request->post('fileList'));
 
         if (is_array($this->requestForm->assignedUsers)) {
-
             if ($this->issueModel->status != IssueStatusEnum::TYPE_DRAFT && $this->requestForm->notifyAssignors) {
                 $notification = new Assigned;
                 $notification->source = $this->issueModel;

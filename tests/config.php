@@ -23,4 +23,3 @@ return yii\helpers\ArrayHelper::merge(
         ],
     ]
 );
-

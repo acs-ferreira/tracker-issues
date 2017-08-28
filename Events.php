@@ -30,7 +30,7 @@ class Events extends \yii\base\Object
             $sender->addItem([
                 'label' => \Yii::t('TrackerIssuesModule.base', 'Tracker issues'),
                 'group' => 'modules',
-                'url' => $space->createUrl("/tracker-issues/issue/show"),
+                'url' => $space->createUrl('/tracker-issues/issue/show'),
                 'icon' => '<i class="fa fa-check-square"></i>',
                 'isActive' => (\Yii::$app->controller->module->id === 'tracker-issues'),
             ]);

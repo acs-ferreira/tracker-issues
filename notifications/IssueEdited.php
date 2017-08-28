@@ -27,7 +27,8 @@ class IssueEdited extends BaseNotification
         /** @var \tracker\models\Issue $issue */
         $issue = $this->source;
         return \Yii::t(
-            'TrackerIssuesModule.views', '{userName} changed the issue {issue} wherever you are assigned.',
+            'TrackerIssuesModule.views',
+            '{userName} changed the issue {issue} wherever you are assigned.',
             [
                 '{userName}' => '<strong>' . Html::encode($this->originator->getDisplayName()) . '</strong>',
                 '{issue}' => '"' . Html::encode($issue->getContentDescription()) . '"',

@@ -38,7 +38,7 @@ $container = $object->content->container;
             <!-- Show space image, if you are outside from a space -->
             <?php if (!Yii::$app->controller instanceof ContentContainerController &&
                       $object->content->container instanceof Space
-            ): ?>
+            ) : ?>
                 <?php echo \humhub\modules\space\widgets\Image::widget([
                     'space' => $object->content->container,
                     'width' => 20,
@@ -65,7 +65,7 @@ $container = $object->content->container;
                         <!-- show profile name -->
                         <?php if (!Yii::$app->controller instanceof ContentContainerController &&
                                   $container instanceof User && $container->id != $user->id
-                        ): ?>
+                        ) : ?>
                             <i class="fa fa-caret-right" aria-hidden="true"></i>
                             <strong><a
                                     href="<?php echo $container->getUrl(); ?>"><?php echo Html::encode($container->displayName); ?></a></strong>&nbsp;
@@ -75,15 +75,18 @@ $container = $object->content->container;
 
                         <?php if ($object->content->created_at !== $object->content->updated_at &&
                                   $object->content->updated_at != ''
-                        ): ?>
-                            (<?php echo Yii::t('ContentModule.views_wallLayout', 'Updated :timeago',
-                                [':timeago' => \humhub\widgets\TimeAgo::widget(['timestamp' => $object->content->updated_at])]); ?>)
+                        ) : ?>
+                            (<?php echo Yii::t(
+                                'ContentModule.views_wallLayout',
+                                'Updated :timeago',
+                                [':timeago' => \humhub\widgets\TimeAgo::widget(['timestamp' => $object->content->updated_at])]
+                            ); ?>)
                         <?php endif; ?>
 
                         <!-- show space name -->
                         <?php if (!Yii::$app->controller instanceof ContentContainerController &&
                                   $container instanceof Space
-                        ): ?>
+                        ) : ?>
                             <?php echo Yii::t('ContentModule.views_wallLayout', 'in'); ?> <strong><a
                                     href="<?php echo $container->getUrl(); ?>"><?php echo Html::encode($container->name); ?></a></strong>&nbsp;
                         <?php endif; ?>
